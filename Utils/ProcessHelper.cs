@@ -9,6 +9,11 @@ namespace MyUpdate.Utils
 {
     public class ProcessHelper
     {
+        /// <summary>
+        /// 检查主程序是否处于运行状态
+        /// </summary>
+        /// <param name="processName"></param>
+        /// <returns></returns>
         public static bool IsRunningProcess(string processName)
         {
             Process[] arrPro = GetProcess();

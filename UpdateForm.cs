@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using MyUpdate.Entity;
 using MyUpdate.Utils;
@@ -30,21 +26,10 @@ namespace MyUpdate
         private void UpdateForm_Load(object sender, EventArgs e)
         {
 
-            //List<string> processNames = new List<string>();
-            //string mainPro = string.Empty;
-            //processNames.AddRange( AppParameter.AppNames);
-            //for (int i = 0; i < processNames.Count; i++)
-            //{
-            //    processNames[i] = processNames[i].Substring(processNames[i].LastIndexOf('\\')).Trim('\\').Replace(".exe", "");
-            //}
-            //mainPro = processNames.FirstOrDefault();
-            //AppParameter.IsRunning = ProcessHelper.IsRunningProcess(mainPro);
-            //if (AppParameter.IsRunning)
-            //    foreach (string item in processNames)
-            //        ProcessHelper.CloseProcess(item);
 
             CloseApp();
 
+            // 检查更新,如果需要更新，则先备份旧的主程序目录；
             if (CheckUpdate())
             {
                 if (!Backup())
@@ -53,6 +38,11 @@ namespace MyUpdate
                     btnStart.Enabled = false;
                     isDelete = true;
                     return;
+                }
+                else
+                {
+                    // TODO
+                    // MessageBox.Show("备份成功");
                 }
 
             }
@@ -92,7 +82,8 @@ namespace MyUpdate
         {
             this.Close();
         }
-
+        
+        // 点击更新事件
         private void btnStart_Click(object sender, EventArgs e)
         {
             btnStart.Enabled = false;
@@ -104,10 +95,10 @@ namespace MyUpdate
         /// </summary>
         public void UpdateApp()
         {
-            //bool flag = false;
             int successCount = 0;
             int failCount = 0;
             int itemIndex = 0;
+            // 获取更新文件的配置参数
             List<FileENT> list = ConfigHelper.GetUpdateList();
             if (list.Count == 0)
             {
@@ -118,11 +109,9 @@ namespace MyUpdate
                 this.Close();
                 return;
             }
-            //Thread[] arrThread = new Thread[5];
-            //for (int i = 0; i < arrThread.Length; i++)
-            //{
-            //    arrThread[i] = new Thread(new ThreadStart(delegate()
-            //    {
+
+
+            // TODO: 单个线程
             thread = new Thread(new ThreadStart(delegate
             {
                 #region thread method
@@ -137,8 +126,6 @@ namespace MyUpdate
                             break;
                         ent = list[itemIndex];
 
-
-                        //PrintResultDelegate pd = PrintResult;
                         string msg = string.Empty;
                         if (ExecUpdateItem(ent))
                         {
@@ -153,8 +140,6 @@ namespace MyUpdate
 
                         if (this.InvokeRequired)
                         {
-                            //this.Invoke(pd, msg,
-                            //   (int)Math.Ceiling(1f / list.Count * 100));
                             this.Invoke((Action)delegate()
                             {
                                 listBox1.Items.Add(msg);
@@ -168,8 +153,6 @@ namespace MyUpdate
                         if (successCount + failCount == list.Count && this.InvokeRequired)
                         {
                             string finishMessage = string.Empty;
-                            //SetButtonDelegate sbtn = SetButton;
-                            //this.Invoke(sbtn);
                             if (this.InvokeRequired)
                             {
                                 this.Invoke((Action)delegate()
@@ -193,14 +176,9 @@ namespace MyUpdate
                 }
                 #endregion
             }));
-            //    }));
-            //}
             runningLock = true;
             thread.Start();
-            //foreach (Thread t in arrThread)
-            //{
-            //    t.Start();
-            //}
+
         }
 
         /// <summary>
@@ -218,33 +196,42 @@ namespace MyUpdate
                 if (ent.Option == UpdateOption.del)
                     File.Delete(ent.FileFullName);
                 else
-                    HttpHelper.DownLoadFile(ent.Src, Path.Combine(AppParameter.MainPath, ent.FileFullName));
+                    // 下载更新文件到主程序目录
+                    FtpHelper.FTPDownLoadFile(ent.Src, AppParameter.MainPath, ent.FileFullName);
             }
             catch { result = false; }
             return result;
         }
 
         /// <summary>
-        /// 检查更新 有则提示用户 确认后下载新的更新配置
+        /// 检查更新方法
         /// </summary>
-        /// <returns>用户确认信息</returns>
+        /// <returns></returns>
         public static bool CheckUpdate()
         {
             bool result = false;
-
-            HttpHelper.DownLoadFile(AppParameter.ServerURL, AppParameter.LocalPath + "temp_config.xml");
+            
+            // 第一个参数：服务器地址；第二个参数：服务器上下载文件名；第三个参数：客户端下载保存文件名；第四个参数：客户端地址
+            FtpHelper.FTPDownLoadFile(AppParameter.ServerURL, "updateconfig.xml", "temp_config.xml", AppParameter.LocalPath);
+            
+            // 如果本地不存在更新配置文件返回true，即需要更新；
             if (!File.Exists(AppParameter.LocalUPdateConfig))
+            {
+                
                 result = true;
+            }
+            // 本地如果存在更新文件，则需比对客户端和服务器端的文件；
             else
             {
                 long localSize = new FileInfo(AppParameter.LocalUPdateConfig).Length;
                 long tempSize = new FileInfo(AppParameter.LocalPath + "temp_config.xml").Length;
 
-                if (localSize >= tempSize) result = false;
+                if (localSize > tempSize) result = false;
 
                 else result = true;
             }
 
+            // 将拉取的服务器配置文件复制保存为本地的更新文件，并删除临时文件；
             if (result)
             {
                 if (File.Exists(AppParameter.LocalUPdateConfig)) File.Delete(AppParameter.LocalUPdateConfig);
@@ -252,29 +239,19 @@ namespace MyUpdate
             }
             else
                 result = false;
-
             File.Delete(AppParameter.LocalPath + "temp_config.xml");
             return result;
         }
 
         /// <summary>
-        /// 备份
+        /// 备份程序
         /// </summary>
+        /// <returns></returns>
         public static bool Backup()
         {
+            // 以"yyyy-MM-dd HH_mm_ss_v_version.rar"方式命名，保存在指定备份目录；
             string sourcePath = Path.Combine(AppParameter.BackupPath, DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss")+"_v_"+AppParameter.Version + ".rar");
             return ZipHelper.Zip(AppParameter.MainPath.Trim() , sourcePath);
         }
-
-        //private void PrintResult(string msg, int val)
-        //{
-        //    listBox1.Items.Add(msg);
-        //    progressBar1.Value = progressBar1.Value + val > 100 ? 100 : progressBar1.Value + val;
-        //}
-
-        //private void SetButton()
-        //{
-        //    btnFinish.Enabled = true;
-        //}
     }
 }

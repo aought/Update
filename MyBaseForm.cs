@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using MyUpdate.Entity;
 using MyUpdate.Utils;
@@ -15,6 +14,7 @@ namespace MyUpdate
             #region  Process Handling
           
             List<string> processNames = new List<string>();
+            // mainPro保存主程序名称
             string mainPro = string.Empty;
             processNames.AddRange(AppParameter.AppNames);
             for (int i = 0; i < processNames.Count; i++)
@@ -23,6 +23,7 @@ namespace MyUpdate
             }
             mainPro = processNames.FirstOrDefault();
             AppParameter.IsRunning = ProcessHelper.IsRunningProcess(mainPro);
+            // 主程序如果在运行，则需要关闭主程序，更新完成后重新启动；
             if (AppParameter.IsRunning)
             {
                 MessageBox.Show("此操作需要关闭要更新的程序，请保存相关数据按确定继续", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
