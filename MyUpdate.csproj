@@ -92,6 +92,7 @@
       <DependentUpon>UpdateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\ConfigHelper.cs" />
+    <Compile Include="Utils\FileCompareHelper.cs" />
     <Compile Include="Utils\FtpHelper.cs" />
     <Compile Include="Utils\ProcessHelper.cs" />
     <Compile Include="Utils\ZipHelper.cs" />

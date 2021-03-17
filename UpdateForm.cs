@@ -12,8 +12,6 @@ namespace MyUpdate
     public partial class UpdateForm : MyBaseForm
     {
 
-        //private delegate void PrintResultDelegate(string msg, int val);
-        //private delegate void SetButtonDelegate();
         private bool isDelete=true;
         private bool runningLock = false;
         private Thread thread;
@@ -25,11 +23,8 @@ namespace MyUpdate
 
         private void UpdateForm_Load(object sender, EventArgs e)
         {
-
-
             CloseApp();
 
-            // 检查更新,如果需要更新，则先备份旧的主程序目录；
             if (CheckUpdate())
             {
                 if (!Backup())
@@ -41,8 +36,7 @@ namespace MyUpdate
                 }
                 else
                 {
-                    // TODO
-                    // MessageBox.Show("备份成功");
+                    MessageBox.Show("备份成功");
                 }
 
             }
@@ -83,7 +77,7 @@ namespace MyUpdate
             this.Close();
         }
         
-        // 点击更新事件
+        // 点击更新按钮事件
         private void btnStart_Click(object sender, EventArgs e)
         {
             btnStart.Enabled = false;
@@ -111,7 +105,7 @@ namespace MyUpdate
             }
 
 
-            // TODO: 单个线程
+            // 单个线程
             thread = new Thread(new ThreadStart(delegate
             {
                 #region thread method
@@ -197,6 +191,9 @@ namespace MyUpdate
                     File.Delete(ent.FileFullName);
                 else
                     // 下载更新文件到主程序目录
+                    // ent.Src："ftp://192.168.2.113/"
+                    // AppParameter.MainPath："C:\\Users\\Empty\\Desktop\\Debug"
+                    // ent.FileFullName："Smart.FormDesigner.Demo.exe"
                     FtpHelper.FTPDownLoadFile(ent.Src, AppParameter.MainPath, ent.FileFullName);
             }
             catch { result = false; }
@@ -204,34 +201,32 @@ namespace MyUpdate
         }
 
         /// <summary>
-        /// 检查更新方法
+        /// 检查更新
         /// </summary>
         /// <returns></returns>
         public static bool CheckUpdate()
         {
+            // result：是否更新标志；
             bool result = false;
-            
+
             // 第一个参数：服务器地址；第二个参数：服务器上下载文件名；第三个参数：客户端下载保存文件名；第四个参数：客户端地址
+            // AppParameter.ServerURL参数示例："ftp://192.168.2.113/"
+            // AppParameter.LocalPath参数示例："C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin\\Debug\\"
             FtpHelper.FTPDownLoadFile(AppParameter.ServerURL, "updateconfig.xml", "temp_config.xml", AppParameter.LocalPath);
             
             // 如果本地不存在更新配置文件返回true，即需要更新；
             if (!File.Exists(AppParameter.LocalUPdateConfig))
             {
-                
                 result = true;
             }
             // 本地如果存在更新文件，则需比对客户端和服务器端的文件；
             else
             {
-                long localSize = new FileInfo(AppParameter.LocalUPdateConfig).Length;
-                long tempSize = new FileInfo(AppParameter.LocalPath + "temp_config.xml").Length;
-
-                if (localSize > tempSize) result = false;
-
-                else result = true;
+                // 通过哈希值比对文件
+                result = !FileCompareHelper.FileCompare(AppParameter.LocalUPdateConfig, AppParameter.LocalPath + "temp_config.xml");
             }
 
-            // 将拉取的服务器配置文件复制保存为本地的更新文件，并删除临时文件；
+            // 将拉取的服务器配置文件保存为本地的更新文件，并删除临时文件；
             if (result)
             {
                 if (File.Exists(AppParameter.LocalUPdateConfig)) File.Delete(AppParameter.LocalUPdateConfig);
@@ -244,7 +239,7 @@ namespace MyUpdate
         }
 
         /// <summary>
-        /// 备份程序
+        /// 备份
         /// </summary>
         /// <returns></returns>
         public static bool Backup()

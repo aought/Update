@@ -24,7 +24,8 @@ namespace MyUpdate.Utils
                 FtpWebResponse response = (FtpWebResponse)req.GetResponse();
                 Stream stream = response.GetResponseStream();
                 byte[] buffer = new byte[2048];
-                FileStream fs = new FileStream(dir + fileName, FileMode.Create);
+                // 传入的主程序目录后面没有\\
+                FileStream fs = new FileStream(dir + "\\" + fileName, FileMode.Create);
                 int ReadCount = stream.Read(buffer, 0, buffer.Length);
                 while (ReadCount > 0)
                 {
@@ -45,7 +46,7 @@ namespace MyUpdate.Utils
         public static void FTPDownLoadFile(string url, string fileNameSer, string fileNameCli, string dir)
         {
 
-
+            // downloadUrl示例："ftp://192.168.2.113//updateconfig.xml"
             string downloadUrl = String.Format("{0}/{1}", url, fileNameSer);
             FtpWebRequest req = (FtpWebRequest)FtpWebRequest.Create(downloadUrl);
             req.Method = WebRequestMethods.Ftp.DownloadFile;
@@ -57,6 +58,8 @@ namespace MyUpdate.Utils
                 FtpWebResponse response = (FtpWebResponse)req.GetResponse();
                 Stream stream = response.GetResponseStream();
                 byte[] buffer = new byte[2048];
+                // dir："C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin\\Debug\\"
+                // fileNameCli："temp_config.xml"
                 FileStream fs = new FileStream(dir + fileNameCli, FileMode.Create);
                 int ReadCount = stream.Read(buffer, 0, buffer.Length);
                 while (ReadCount > 0)
