@@ -1,4 +1,4 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <updateFiles>
-  <file name="Smart.FormDesigner.Demo.exe" src="ftp://192.168.2.113/EXE" version="5" hash="63621282130871179349188109583184203143161195139135271261462563324914322798111206" size="40960" option="add" />
+  <file name="Smart.FormDesigner.Demo.exe" src="ftp://192.168.2.113/EXE" version="50" size="40448" option="add" />
 </updateFiles>
