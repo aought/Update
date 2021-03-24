@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <updateFiles>
-  <file name="Smart.FormDesigner.Demo.exe" src="ftp://192.168.2.113/EXE" version="50" size="40448" option="add" />
+  <file name="Smart.FormDesigner.Demo.exe" src="ftp://192.168.0.104/Ex02/EXE" version="4" hash="63621282130871179349188109583184203143161195139135271261462563324914322798111206" size="40960" option="add" />
+  <file name="test.txt" src="ftp://192.168.0.104/Ex02/EXE" version="5" hash="8497126197142354714786731211272112819512517843721081531515219522244916619683123" size="7" option="add" />
 </updateFiles>
