@@ -191,7 +191,7 @@ namespace MyUpdate
                     File.Delete(ent.FileFullName);
                 else
                     // 下载更新文件到主程序目录
-                    FtpHelper.FTPDownLoadFile(ent.Src, AppParameter.MainPath, ent.FileFullName);
+                    FtpHelper.FTPDownLoadFile(ent.Src, AppParameter.fatherFolder, ent.FileFullName);
             }
             catch { result = false; }
             return result;
@@ -207,6 +207,8 @@ namespace MyUpdate
             bool result = false;
 
             // 第一个参数：服务器地址；第二个参数：服务器上下载文件名；第三个参数：客户端下载保存文件名；第四个参数：客户端地址
+            // AppParameter.ServerURL	"ftp://localhost/bin"
+            // AppParameter.LocalPath	"C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin\\Debug\\"
             FtpHelper.FTPDownLoadFile(AppParameter.ServerURL, "updateconfig.xml", "temp_config.xml", AppParameter.LocalPath);
             
             // 如果本地不存在更新配置文件返回true，即需要更新；

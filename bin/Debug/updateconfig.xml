@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <updateFiles>
-  <file name="Smart.FormDesigner.Demo.exe" src="ftp://192.168.0.104/Ex02/EXE" version="4" hash="63621282130871179349188109583184203143161195139135271261462563324914322798111206" size="40960" option="add" />
-  <file name="test.txt" src="ftp://192.168.0.104/Ex02/EXE" version="5" hash="8497126197142354714786731211272112819512517843721081531515219522244916619683123" size="7" option="add" />
+  <file name="bin.exe" src="ftp://localhost/bin/VersionFolder" version="2" hash="D692731F28CE82D017475DB0972CB45043348DC0C0A614350DA2099BE9127CFF" size="40448" option="add" />
+  <file name="ps.txt" src="ftp://localhost/bin/VersionFolder" version="6" hash="1F247345792028621DECE5139D40EEC36A97095771C592FD6397A4E2E4D8B2A4" size="44" option="add" />
+  <file name="test.txt" src="ftp://localhost/bin/VersionFolder" version="4" hash="C13CD0230D4D2862612509DFBC52179982594AB7366B2E048FB1C0431C529B79" size="15" option="add" />
 </updateFiles>

@@ -47,7 +47,7 @@ namespace MyUpdate.Utils
         {
 
             // downloadUrl示例："ftp://192.168.2.113//updateconfig.xml"
-            // 此时downloadUrl = "ftp://192.168.2.113/Ex03/updateconfig.xml"
+            // 此时downloadUrl = "ftp://localhost/bin/updateconfig.xml"
             string downloadUrl = String.Format("{0}/{1}", url, fileNameSer);
             FtpWebRequest req = (FtpWebRequest)FtpWebRequest.Create(downloadUrl);
             req.Method = WebRequestMethods.Ftp.DownloadFile;
