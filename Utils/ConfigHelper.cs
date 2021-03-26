@@ -17,7 +17,13 @@ namespace MyUpdate.Utils
             XmlDocument xml = new XmlDocument();
             // XML加载本地更新配置文件
             xml.Load(AppParameter.LocalUPdateConfig);
+            // TODO：待修正
+            // xml.Load(AppParameter.oldConfig);
             // 此处获取结果实例："/updateFiles/file[@version>27]"
+            // 此时获取到：AppParameter.Version	"13"
+            // 返回 string.Concat	"/updateFiles/file[@version>13]"
+            // 此时是获取版本号大于Config中存储的版本号的文件，Count是用来计数有几个文件的；
+            // Count=0就意味着没有文件大于该版本号，所以不会更新；
             XmlNodeList nodeList = xml.SelectNodes("/updateFiles/file[@version>" + AppParameter.Version + "]");
             
             FileENT ent = null;

@@ -89,6 +89,9 @@ namespace MyUpdate
         /// </summary>
         public void UpdateApp()
         {
+            // TODO：修改比对版本号逻辑
+
+
             int successCount = 0;
             int failCount = 0;
             int itemIndex = 0;
@@ -191,7 +194,7 @@ namespace MyUpdate
                     File.Delete(ent.FileFullName);
                 else
                     // 下载更新文件到主程序目录
-                    FtpHelper.FTPDownLoadFile(ent.Src, AppParameter.fatherFolder, ent.FileFullName);
+                    FtpHelper.FTPDownLoadFile(ent.Src, AppParameter.parentFolder, ent.FileFullName);
             }
             catch { result = false; }
             return result;
@@ -214,24 +217,40 @@ namespace MyUpdate
             // 如果本地不存在更新配置文件返回true，即需要更新；
             if (!File.Exists(AppParameter.LocalUPdateConfig))
             {
+                // 将拉取的服务器配置文件保存为本地的更新文件，并删除临时文件；
+                File.Copy(AppParameter.LocalPath + "temp_config.xml", AppParameter.LocalUPdateConfig);
                 result = true;
             }
             // 本地如果存在更新文件，则需比对客户端和服务器端的文件；
             else
             {
-                // 通过哈希值比对文件
-                result = !FileCompareHelper.FileCompare(AppParameter.LocalUPdateConfig, AppParameter.LocalPath + "temp_config.xml");
+                // 通过哈希值比对文件，两个文件相同result返回false，即不需要更新；
+                // flag为true，两文件相同；flag为false，两文件不同，
+                bool flag = FileCompareHelper.FileCompare(AppParameter.LocalUPdateConfig, AppParameter.LocalPath + "temp_config.xml");
+                // 两文件不同，将本地配置清单拷贝成旧的配置清单，本地配置清单更新为服务器上的配置清单
+                if (!flag)
+                {
+                    if (File.Exists(AppParameter.oldConfig))
+                        File.Delete(AppParameter.oldConfig);
+                    File.Copy(AppParameter.LocalUPdateConfig, AppParameter.oldConfig);
+
+                    if (File.Exists(AppParameter.LocalUPdateConfig))
+                        File.Delete(AppParameter.LocalUPdateConfig);
+                    File.Copy(AppParameter.tempConfig, AppParameter.LocalUPdateConfig);
+                }
+                result = !flag;
             }
 
-            // 将拉取的服务器配置文件保存为本地的更新文件，并删除临时文件；
-            if (result)
-            {
-                if (File.Exists(AppParameter.LocalUPdateConfig)) File.Delete(AppParameter.LocalUPdateConfig);
-                File.Copy(AppParameter.LocalPath + "temp_config.xml", AppParameter.LocalUPdateConfig);
-            }
-            else
-                result = false;
+            //if (result)
+            //{
+            //    if (File.Exists(AppParameter.LocalUPdateConfig)) File.Delete(AppParameter.LocalUPdateConfig);
+            //    File.Copy(AppParameter.LocalPath + "temp_config.xml", AppParameter.LocalUPdateConfig);
+            //}
+            //else
+            //    result = false;
+
             File.Delete(AppParameter.LocalPath + "temp_config.xml");
+
             return result;
         }
 
@@ -241,9 +260,19 @@ namespace MyUpdate
         /// <returns></returns>
         public static bool Backup()
         {
+            // 判断文件夹是否存在，不存在则创建
+            if (!Directory.Exists(AppParameter.BackupPath))
+            {
+                Directory.CreateDirectory(AppParameter.BackupPath);
+            }
+
             // 以"yyyy-MM-dd HH_mm_ss_v_version.rar"方式命名，保存在指定备份目录；
             string sourcePath = Path.Combine(AppParameter.BackupPath, DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss")+"_v_"+AppParameter.Version + ".rar");
-            return ZipHelper.Zip(AppParameter.MainPath.Trim() , sourcePath);
+            string temp = AppParameter.parentFolder.Trim();
+            // AppParameter.MainPath	"C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin\\Debug
+            // AppParameter.parentFolder	"C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin"
+            return ZipHelper.Zip(AppParameter.parentFolder.Trim() , sourcePath);
+            // return ZipHelper.Zip(AppParameter.parentFolder.Trim(), sourcePath);
         }
     }
 }

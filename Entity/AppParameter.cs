@@ -11,15 +11,18 @@ namespace MyUpdate.Entity
     public class AppParameter
     {
         public static string currentFolder = new DirectoryInfo(".").FullName;
-        public static string fatherFolder = new DirectoryInfo("..").FullName;
+        public static string parentFolder = new DirectoryInfo("..").FullName;
         public static string proName = new DirectoryInfo("..").Name;
-        public static string appName = Path.Combine(fatherFolder, proName + ".exe");
+        public static string appName = Path.Combine(parentFolder, proName + ".exe");
+
+        public static string oldConfig = Path.Combine(currentFolder, "old_config.xml");
+        public static string tempConfig = Path.Combine(currentFolder, "temp_config.xml");
 
         /// <summary>
         /// 备份路径
         /// </summary>
         // public static string BackupPath = ConfigurationManager.AppSettings["backupPath"];
-        public static string BackupPath = Path.Combine(fatherFolder, "Backup");
+        public static string BackupPath = Path.Combine(parentFolder, "Backup");
 
 
         /// <summary>
@@ -40,13 +43,13 @@ namespace MyUpdate.Entity
         public static string Version = ConfigurationManager.AppSettings["version"];
 
         /// <summary>
-        /// 更新程序路径
+        /// 更新程序全路径
         /// </summary>
         // public static string LocalPath = AppDomain.CurrentDomain.BaseDirectory;
         public static string LocalPath = @currentFolder + "\\";
 
         /// <summary>
-        /// 主程序路径
+        /// 更新程序路径
         /// </summary>
         // public static string MainPath = ConfigurationManager.AppSettings["mainPath"];
         public static string MainPath = currentFolder;

@@ -9,6 +9,7 @@ using System.IO;
 using ICSharpCode.SharpZipLib;
 using ICSharpCode.SharpZipLib.Checksums;
 using ICSharpCode.SharpZipLib.Zip;
+using MyUpdate.Entity;
 
 namespace MyUpdate.Utils
 {
@@ -77,14 +78,27 @@ namespace MyUpdate.Utils
                 GC.Collect(1);
             }
 
-
+            // TODO：此处递归文件夹；需要排除更新程序（AutoUpdater）和备份（Backup）目录
             folders = Directory.GetDirectories(FolderToZip);
             foreach (string folder in folders)
             {
-                if (!ZipFileDictory(folder, s, Path.Combine(ParentFolderName, Path.GetFileName(FolderToZip))))
+                // if (folder == @"C:\Users\Empty\Documents\GitHub\Update\bin\Backup" || folder == @"C:\Users\Empty\Documents\GitHub\Update\bin\Debug")
+                if (folder == AppParameter.BackupPath || folder == AppParameter.MainPath)
                 {
-                    return false;
+                    continue;
                 }
+                else
+                {
+                    if (!ZipFileDictory(folder, s, Path.Combine(ParentFolderName, Path.GetFileName(FolderToZip))))
+                    {
+                        return false;
+                    }
+                }
+
+                //if (!ZipFileDictory(folder, s, Path.Combine(ParentFolderName, Path.GetFileName(FolderToZip))))
+                //{
+                //    return false;
+                //}
             }
 
             return res;

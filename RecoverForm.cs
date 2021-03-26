@@ -83,7 +83,9 @@ namespace MyUpdate
 
             Action callBack = new Action(delegate() {
 
-                string path = AppParameter.MainPath.Trim();
+                // TODO：此处路径修改
+                // string path = AppParameter.MainPath.Trim();
+                string path = AppParameter.parentFolder.Trim();
                 path = path.Substring(0, path.LastIndexOf('\\'));
                 ZipHelper.UnZip(fileName, path);
                 MessageBox.Show("还原完毕，程序已还原到" + version, "提示");
