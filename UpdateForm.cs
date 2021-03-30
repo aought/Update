@@ -82,6 +82,16 @@ namespace MyUpdate
         private void btnStart_Click(object sender, EventArgs e)
         {
             btnStart.Enabled = false;
+            //List<FileENT> list = ConfigHelper.GetUpdateList();
+            //if (list.Count > Convert.ToInt32(ConfigurationManager.AppSettings["counts"]))
+            //{
+            //    ConfigHelper.UpdateAppConfig("version", "0");
+            //    MessageBox.Show("新添文件");
+            //}
+            //else
+            //{
+            //    ConfigHelper.UpdateAppConfig("counts", list.Count.ToString());
+            //}
             UpdateApp();
         }
 
@@ -98,15 +108,30 @@ namespace MyUpdate
             int itemIndex = 0;
             // 获取更新文件的配置参数
             List<FileENT> list = ConfigHelper.GetUpdateList();
-            if (list.Count == 0)
+
+            if (list.Count >= Convert.ToInt32(ConfigurationManager.AppSettings["counts"]))
             {
-                MessageBox.Show("版本已是最新", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.btnFinish.Enabled = true;
-                this.btnStart.Enabled = false;
-                isDelete = false;
-                this.Close();
-                return;
+                ConfigHelper.UpdateAppConfig("version", "0");
+                MessageBox.Show("新添文件");
             }
+            else
+            {
+                ConfigHelper.UpdateAppConfig("counts", list.Count.ToString());
+            }
+
+            //if (list.Count == 0)
+            //{
+            //    MessageBox.Show("版本已是最新", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //    this.btnFinish.Enabled = true;
+            //    this.btnStart.Enabled = false;
+            //    isDelete = false;
+            //    this.Close();
+            //    return;
+            //}
+
+            
+
+
 
 
             // 单个线程
@@ -167,6 +192,9 @@ namespace MyUpdate
                                 // AppParameter.Version = list.Last().Version;
                                 AppParameter.Version = ConfigHelper.GetVersion().ToString();
                                 ConfigHelper.UpdateAppConfig("version", AppParameter.Version);
+                                string times = (Convert.ToInt32(ConfigurationManager.AppSettings["times"]) + 1).ToString();
+                                ConfigHelper.UpdateAppConfig("times", times);
+                                MessageBox.Show(times);
                                 finishMessage = "升级完成，程序已成功升级到" + AppParameter.Version;
                             }
                             else
