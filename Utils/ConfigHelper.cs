@@ -17,7 +17,7 @@ namespace MyUpdate.Utils
             XmlDocument xml = new XmlDocument();
             // XML加载本地更新配置文件
             xml.Load(AppParameter.LocalUPdateConfig);
-            // TODO：待修正
+            // TODO
             // xml.Load(AppParameter.oldConfig);
             // 此处获取结果实例："/updateFiles/file[@version>27]"
             // 此时获取到：AppParameter.Version	"13"
@@ -54,6 +54,28 @@ namespace MyUpdate.Utils
             config.AppSettings.Settings[key].Value = value;
             config.Save(ConfigurationSaveMode.Full);
             ConfigurationManager.RefreshSection("appSettings");
+        }
+
+        // 获取最低版本号
+        public static int GetVersion()
+        {
+            int version = 0;
+
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(AppParameter.LocalUPdateConfig);
+            XmlNode xmlNode = xmlDocument.SelectSingleNode("updateFiles");
+            XmlNodeList xmlNodeList = xmlNode.ChildNodes;
+            foreach (XmlNode singleXmlNode in xmlNodeList)
+            {
+                version = Convert.ToInt32(singleXmlNode.Attributes["version"].Value);
+                int tempVersion = Convert.ToInt32(singleXmlNode.Attributes["version"].Value);
+                if (tempVersion < version)
+                {
+                    version = tempVersion;
+                }
+            }
+
+            return version;
         }
     }
 }

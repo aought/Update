@@ -79,7 +79,14 @@ namespace MyUpdate.Utils
             }
 
             // TODO：此处递归文件夹；需要排除更新程序（AutoUpdater）和备份（Backup）目录
+            // FolderToZip = "C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin"
+            // 即此时压缩的是项目的文件夹
             folders = Directory.GetDirectories(FolderToZip);
+            // 此时folder获得目录清单如下：
+            // [0] = "C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin\\Backup"
+            // [1] = "C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin\\Debug"
+            // [2] = "C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin\\sub"
+            // [3] = "C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin\\sub2"
             foreach (string folder in folders)
             {
                 // if (folder == @"C:\Users\Empty\Documents\GitHub\Update\bin\Backup" || folder == @"C:\Users\Empty\Documents\GitHub\Update\bin\Debug")

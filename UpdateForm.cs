@@ -6,6 +6,7 @@ using MyUpdate.Entity;
 using MyUpdate.Utils;
 using System.IO;
 using System.Threading;
+using System.Configuration;
 
 namespace MyUpdate
 {
@@ -160,7 +161,11 @@ namespace MyUpdate
                             isDelete = failCount != 0;
                             if (!isDelete)
                             {
-                                AppParameter.Version = list.Last().Version;
+                                // TODO: 此处修改版本号逻辑，选取所以文件中最低的一个版本号作为总的版本号
+                                // 即主程序只要有一个文件更新，那么整个程序更新，不做增量更新
+                                // 这样也不用存储旧的配置文件清单了
+                                // AppParameter.Version = list.Last().Version;
+                                AppParameter.Version = ConfigHelper.GetVersion().ToString();
                                 ConfigHelper.UpdateAppConfig("version", AppParameter.Version);
                                 finishMessage = "升级完成，程序已成功升级到" + AppParameter.Version;
                             }
@@ -187,6 +192,20 @@ namespace MyUpdate
         {
             bool result = true;
 
+            // test:"C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin\\"
+            string test = ent.Src.Replace(ConfigurationManager.AppSettings["serverURL"], AppParameter.parentFolder).Replace("bin/VersionFolder", "").Replace("/", "\\");
+            // MessageBox.Show(test);
+
+            //string temp = ent.Src.Replace(ConfigurationManager.AppSettings["serverURL"], "").Replace("/", "\\");
+            //string test = AppParameter.parentFolder + temp;
+            //test = test.Replace("\\VersionFolder", "");
+
+            if (!Directory.Exists(test))
+            {
+                Directory.CreateDirectory(test);
+            }
+
+
             try
             {
 
@@ -194,7 +213,13 @@ namespace MyUpdate
                     File.Delete(ent.FileFullName);
                 else
                     // 下载更新文件到主程序目录
-                    FtpHelper.FTPDownLoadFile(ent.Src, AppParameter.parentFolder, ent.FileFullName);
+                    // 此处传入文件夹需修改
+                    // ent.Src：ftp://localhost/bin/VersionFolder/sub
+                    // ConfigurationManager.AppSettings["serverURL"]：ftp://localhost
+                    // AppParameter.parentFolder：C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin
+                    // 目标文件夹：C:\Users\Empty\Documents\GitHub\Update\bin\sub
+                    
+                    FtpHelper.FTPDownLoadFile(ent.Src, test, ent.FileFullName);
             }
             catch { result = false; }
             return result;
@@ -207,7 +232,8 @@ namespace MyUpdate
         public static bool CheckUpdate()
         {
             // result：是否更新标志；
-            bool result = false;
+            // 默认需要更新
+            bool result = true;
 
             // 第一个参数：服务器地址；第二个参数：服务器上下载文件名；第三个参数：客户端下载保存文件名；第四个参数：客户端地址
             // AppParameter.ServerURL	"ftp://localhost/bin"
@@ -219,7 +245,7 @@ namespace MyUpdate
             {
                 // 将拉取的服务器配置文件保存为本地的更新文件，并删除临时文件；
                 File.Copy(AppParameter.LocalPath + "temp_config.xml", AppParameter.LocalUPdateConfig);
-                result = true;
+                // result = true;
             }
             // 本地如果存在更新文件，则需比对客户端和服务器端的文件；
             else
@@ -230,9 +256,9 @@ namespace MyUpdate
                 // 两文件不同，将本地配置清单拷贝成旧的配置清单，本地配置清单更新为服务器上的配置清单
                 if (!flag)
                 {
-                    if (File.Exists(AppParameter.oldConfig))
-                        File.Delete(AppParameter.oldConfig);
-                    File.Copy(AppParameter.LocalUPdateConfig, AppParameter.oldConfig);
+                    //if (File.Exists(AppParameter.oldConfig))
+                    //    File.Delete(AppParameter.oldConfig);
+                    //File.Copy(AppParameter.LocalUPdateConfig, AppParameter.oldConfig);
 
                     if (File.Exists(AppParameter.LocalUPdateConfig))
                         File.Delete(AppParameter.LocalUPdateConfig);
