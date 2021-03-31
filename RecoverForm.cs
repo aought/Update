@@ -88,9 +88,12 @@ namespace MyUpdate
                 string path = AppParameter.parentFolder.Trim();
                 path = path.Substring(0, path.LastIndexOf('\\'));
                 ZipHelper.UnZip(fileName, path);
+                //MessageBox.Show("还原完毕，程序已还原到" + version, "提示");
+                //AppParameter.Version = version;
+                //ConfigHelper.UpdateAppConfig("version", version);
                 MessageBox.Show("还原完毕，程序已还原到" + version, "提示");
-                AppParameter.Version = version;
-                ConfigHelper.UpdateAppConfig("version", version);
+                // AppParameter.Version = version;
+                ConfigHelper.UpdateAppConfig("times", version);
                 File.Delete(AppParameter.LocalUPdateConfig);
 
                 if (this.InvokeRequired)

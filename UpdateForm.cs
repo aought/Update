@@ -112,7 +112,7 @@ namespace MyUpdate
             if (list.Count >= Convert.ToInt32(ConfigurationManager.AppSettings["counts"]))
             {
                 ConfigHelper.UpdateAppConfig("version", "0");
-                MessageBox.Show("新添文件");
+                // MessageBox.Show("新添文件");
             }
             else
             {
@@ -128,11 +128,6 @@ namespace MyUpdate
             //    this.Close();
             //    return;
             //}
-
-            
-
-
-
 
             // 单个线程
             thread = new Thread(new ThreadStart(delegate
@@ -194,8 +189,9 @@ namespace MyUpdate
                                 ConfigHelper.UpdateAppConfig("version", AppParameter.Version);
                                 string times = (Convert.ToInt32(ConfigurationManager.AppSettings["times"]) + 1).ToString();
                                 ConfigHelper.UpdateAppConfig("times", times);
-                                MessageBox.Show(times);
-                                finishMessage = "升级完成，程序已成功升级到" + AppParameter.Version;
+                                // MessageBox.Show(times);
+                                // finishMessage = "升级完成，程序已成功升级到" + AppParameter.Version;
+                                finishMessage = "升级完成，程序已成功升级到" + times;
                             }
                             else
                                 finishMessage = "升级完成，但不成功";
@@ -321,8 +317,9 @@ namespace MyUpdate
             }
 
             // 以"yyyy-MM-dd HH_mm_ss_v_version.rar"方式命名，保存在指定备份目录；
-            string sourcePath = Path.Combine(AppParameter.BackupPath, DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss")+"_v_"+AppParameter.Version + ".rar");
-            string temp = AppParameter.parentFolder.Trim();
+            // string sourcePath = Path.Combine(AppParameter.BackupPath, DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss")+"_v_"+AppParameter.Version + ".rar");
+            string sourcePath = Path.Combine(AppParameter.BackupPath, DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss") + "_v_" + ConfigurationManager.AppSettings["times"] + ".rar");
+            // string temp = AppParameter.parentFolder.Trim();
             // AppParameter.MainPath	"C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin\\Debug
             // AppParameter.parentFolder	"C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin"
             return ZipHelper.Zip(AppParameter.parentFolder.Trim() , sourcePath);
