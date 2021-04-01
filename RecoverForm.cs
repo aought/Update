@@ -92,6 +92,7 @@ namespace MyUpdate
                 //AppParameter.Version = version;
                 //ConfigHelper.UpdateAppConfig("version", version);
                 MessageBox.Show("还原完毕，程序已还原到" + version, "提示");
+                MessageBox.Show("如需更新，请重新启动更新程序。", "特别提醒");
                 // AppParameter.Version = version;
                 ConfigHelper.UpdateAppConfig("times", version);
                 File.Delete(AppParameter.LocalUPdateConfig);
