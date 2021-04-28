@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<updateFiles>
+  <file name="BPUnitApp.exe" src="ftp://localhost/Debug/VersionFolder" version="1" hash="10D221260B757CEC1F05055F08852FC5135612427D12836D8E9F5E7A364FE825" size="318464" option="add" />
+  <file name="BPUnitApp.exe.config" src="ftp://localhost/Debug/VersionFolder" version="1" hash="AD1FAFE196FF17C8F0877F33F6D2029B626844F7E8F655F49322DCAC6E05068A" size="260" option="add" />
+</updateFiles>

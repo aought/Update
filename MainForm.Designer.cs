@@ -61,7 +61,7 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "注意：主程序会在更新或还原时强制关闭，操作完成后自动启动";
             // 
-            // MainForm1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -69,9 +69,9 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnRecover);
             this.Controls.Add(this.btnUpdate);
-            this.Name = "MainForm1";
+            this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "更新工具";
+            this.Text = "更新工具v1.0";
             this.ResumeLayout(false);
 
         }

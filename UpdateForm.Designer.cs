@@ -28,20 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.lbDownloadLog = new System.Windows.Forms.ListBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.btnFinish = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // listBox1
+            // lbDownloadLog
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(30, 68);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(359, 232);
-            this.listBox1.TabIndex = 3;
+            this.lbDownloadLog.FormattingEnabled = true;
+            this.lbDownloadLog.ItemHeight = 12;
+            this.lbDownloadLog.Location = new System.Drawing.Point(30, 68);
+            this.lbDownloadLog.Name = "lbDownloadLog";
+            this.lbDownloadLog.Size = new System.Drawing.Size(359, 232);
+            this.lbDownloadLog.TabIndex = 3;
             // 
             // progressBar1
             // 
@@ -78,7 +78,7 @@
             this.ClientSize = new System.Drawing.Size(419, 350);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.btnFinish);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.lbDownloadLog);
             this.Controls.Add(this.progressBar1);
             this.Name = "UpdateForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -91,7 +91,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox lbDownloadLog;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button btnFinish;
         private System.Windows.Forms.Button btnStart;
