@@ -29,12 +29,7 @@ namespace MyUpdate.Entity
         /// 更新的URL
         /// </summary>
         // public static string ServerURL = ConfigurationManager.AppSettings["serverURL"];
-        public static string FtpServer = ConfigurationManager.AppSettings["ftpserver"];// String.Format("{0}/{1}", ConfigurationManager.AppSettings["ftpserver"], new DirectoryInfo("..").Name);
-
-        public static string FtpUser = ConfigurationManager.AppSettings["ftpuser"];
-        public static string FtpPwd = ConfigurationManager.AppSettings["ftppwd"];
-        public static string FtpFolder = ConfigurationManager.AppSettings["ftpfolder"];
-
+        public static string ServerURL = String.Format("{0}/{1}", ConfigurationManager.AppSettings["serverURL"], new DirectoryInfo("..").Name);
 
         /// <summary>
         /// 本地更新文件全名

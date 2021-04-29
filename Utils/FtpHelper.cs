@@ -9,24 +9,14 @@ namespace MyUpdate.Utils
 {
     public class FtpHelper
     {
-        /// <summary>
-        /// ftp下载文件
-        /// </summary>
-        /// <param name="ftpServer">ftp服务器+端口</param>
-        /// <param name="ftpUser">登陆用户</param>
-        /// <param name="ftpPwd">登陆密码</param>
-        /// <param name="sourceFileName">远程源文件</param>
-        /// <param name="localFolder">本地保存目录</param>
-        /// <param name="targetFileName">本地目标文件</param>
-        public static bool FTPDownLoadFile(string ftpServer, string ftpUser, string ftpPwd, string sourceFileName, string localFolder, string targetFileName)
+        public static void FTPDownLoadFile(string url, string dir, string fileName)
         {
 
-            // downloadUrl示例："ftp://192.168.2.113//updateconfig.xml"
-            // 此时downloadUrl = "ftp://localhost/bin/updateconfig.xml"
-            string downloadUrl = String.Format("{0}/{1}", ftpServer, sourceFileName);
+
+            string downloadUrl = String.Format("{0}/{1}", url, fileName);
             FtpWebRequest req = (FtpWebRequest)FtpWebRequest.Create(downloadUrl);
             req.Method = WebRequestMethods.Ftp.DownloadFile;
-            req.Credentials = new NetworkCredential(ftpUser, ftpPwd);
+            req.Credentials = new NetworkCredential("open", "open");
             req.UseBinary = true;
             req.Proxy = null;
             try
@@ -34,9 +24,8 @@ namespace MyUpdate.Utils
                 FtpWebResponse response = (FtpWebResponse)req.GetResponse();
                 Stream stream = response.GetResponseStream();
                 byte[] buffer = new byte[2048];
-
-                string localUrl = String.Format("{0}/{1}", localFolder.TrimEnd(new char[] { '\\', '/' }), targetFileName);
-                FileStream fs = new FileStream(localUrl, FileMode.Create);
+                // 传入的主程序目录后面没有\\
+                FileStream fs = new FileStream(dir + "\\" + fileName, FileMode.Create);
                 int ReadCount = stream.Read(buffer, 0, buffer.Length);
                 while (ReadCount > 0)
                 {
@@ -45,12 +34,46 @@ namespace MyUpdate.Utils
                 }
                 fs.Close();
                 stream.Close();
-                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return false;
+            }
+            
+
+        }
+
+        public static void FTPDownLoadFile(string url, string fileNameSer, string fileNameCli, string dir)
+        {
+
+            // downloadUrl示例："ftp://192.168.2.113//updateconfig.xml"
+            // 此时downloadUrl = "ftp://localhost/bin/updateconfig.xml"
+            string downloadUrl = String.Format("{0}/{1}", url, fileNameSer);
+            FtpWebRequest req = (FtpWebRequest)FtpWebRequest.Create(downloadUrl);
+            req.Method = WebRequestMethods.Ftp.DownloadFile;
+            req.Credentials = new NetworkCredential("open", "open");
+            req.UseBinary = true;
+            req.Proxy = null;
+            try
+            {
+                FtpWebResponse response = (FtpWebResponse)req.GetResponse();
+                Stream stream = response.GetResponseStream();
+                byte[] buffer = new byte[2048];
+                // dir："C:\\Users\\Empty\\Documents\\GitHub\\Update\\bin\\Debug\\"
+                // fileNameCli："temp_config.xml"
+                FileStream fs = new FileStream(dir + fileNameCli, FileMode.Create);
+                int ReadCount = stream.Read(buffer, 0, buffer.Length);
+                while (ReadCount > 0)
+                {
+                    fs.Write(buffer, 0, ReadCount);
+                    ReadCount = stream.Read(buffer, 0, buffer.Length);
+                }
+                fs.Close();
+                stream.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
 
 

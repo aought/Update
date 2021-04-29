@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace MyUpdate
 {
-    public partial class RecoverForm : BaseForm
+    public partial class RecoverForm : MyBaseForm
     {
         public RecoverForm()
         {
@@ -32,7 +32,7 @@ namespace MyUpdate
 
         private void RecoverForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            ProcessStartApp();
+            StartApp();
         }
 
         private void btnOption_Click(object sender, EventArgs e)
@@ -48,7 +48,7 @@ namespace MyUpdate
             string version = fileName.Substring(fileName.LastIndexOf('_')).Trim('_');
             fileName = GetBackupList()[listBox1.SelectedIndex];
 
-            ProcessCloseApp();
+            CloseApp();
 
             #region 用Thread
 
@@ -94,7 +94,7 @@ namespace MyUpdate
                 MessageBox.Show("还原完毕，程序已还原到" + version, "提示");
                 MessageBox.Show("如需更新，请重新启动更新程序。", "特别提醒");
                 // AppParameter.Version = version;
-                ConfigHelper.RecoverAppConfig("times", version);
+                ConfigHelper.UpdateAppConfig("times", version);
                 File.Delete(AppParameter.LocalUPdateConfig);
 
                 if (this.InvokeRequired)
